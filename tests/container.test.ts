@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { MicromockContainer } from "@/src/index.ts";
+import { MicromockContainer } from "@/index.ts";
 
 describe("MicromockContainer", () => {
   test("builds, seeds, isolates via reset", async () => {

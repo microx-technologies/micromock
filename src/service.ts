@@ -2,18 +2,13 @@ import { upgradeWebSocket } from "@hono/bun";
 import type { Handler } from "hono";
 import { Hono } from "hono";
 import type { WSContext } from "hono/ws";
-import { FRAMEWORK_NS, HEALTH_PATH, RESET_PATH } from "@/src/constants.ts";
-import type { ManagedConnection, ManagedGateway } from "@/src/gateway.ts";
-import { GatewayRuntime, runGatewayHandler } from "@/src/gateway.ts";
-import {
-  buildCrud,
-  crudHelpers,
-  parseOpKey,
-  resource,
-} from "@/src/resource.ts";
-import { createScheduler } from "@/src/scheduler.ts";
-import { startService } from "@/src/serve.ts";
-import { createState } from "@/src/state.ts";
+import { FRAMEWORK_NS, HEALTH_PATH, RESET_PATH } from "@/constants.ts";
+import type { ManagedConnection, ManagedGateway } from "@/gateway.ts";
+import { GatewayRuntime, runGatewayHandler } from "@/gateway.ts";
+import { buildCrud, crudHelpers, parseOpKey, resource } from "@/resource.ts";
+import { createScheduler } from "@/scheduler.ts";
+import { startService } from "@/serve.ts";
+import { createState } from "@/state.ts";
 import type {
   GatewayDef,
   GatewayRegistry,
@@ -24,7 +19,7 @@ import type {
   Scheduler,
   Service,
   ServiceDefinition,
-} from "@/src/types.ts";
+} from "@/types.ts";
 
 export { resource };
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { apiKeyAuth } from "@/src/auth.ts";
-import { collection, resource } from "@/src/resource.ts";
-import { defineService } from "@/src/service.ts";
+import { apiKeyAuth } from "@/auth.ts";
+import { collection, resource } from "@/resource.ts";
+import { defineService } from "@/service.ts";
 
 const Zone = z.object({ id: z.string(), name: z.string(), status: z.string() });
 const DnsRecord = z.object({

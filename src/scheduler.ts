@@ -1,4 +1,4 @@
-import type { MockContext, Scheduler } from "@/src/types.ts";
+import type { MockContext, Scheduler } from "@/types.ts";
 
 interface ReadWatcher {
   resource: string;

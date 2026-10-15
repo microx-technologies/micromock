@@ -5,7 +5,7 @@ import {
   DEFAULT_API_KEY_HEADER,
   DEFAULT_API_KEY_QUERY,
   ERR_UNAUTHORIZED,
-} from "@/src/constants.ts";
+} from "@/constants.ts";
 
 function unauthorized(c: Context): Response {
   return c.json({ error: ERR_UNAUTHORIZED }, 401);

@@ -1,8 +1,24 @@
 {
-  "name": "micromock",
-  "module": "index.ts",
+  "name": "@microx-technologies/micromock",
+  "version": "0.1.0",
+  "description": "Code-defined, stateful, Dockerized replicas of SaaS APIs for Testcontainers integration tests. Bun-first.",
   "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microx-technologies/micromock.git"
+  },
+  "files": [
+    "dist",
+    "Dockerfile.tmpl",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
+    "build": "tsup",
+    "prepack": "bun run build",
     "test": "bun test",
     "check": "biome check --write && tsc --noEmit"
   },
@@ -13,15 +29,17 @@
     "cloudflare": "^7.3.0",
     "octokit": "^5.0.5",
     "testcontainers": "^12.2.1",
+    "tsup": "^9.0.0",
+    "typescript": "^5",
     "ws": "^8.22.0"
   },
   "peerDependencies": {
-    "testcontainers": "^12",
-    "typescript": "^5"
+    "testcontainers": "^12"
   },
   "dependencies": {
     "@hono/bun": "^1.0.1",
     "hono": "^4.13.13",
     "zod": "^4.6.7"
-  }
+  },
+  "license": "AGPL-3.0"
 }

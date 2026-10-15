@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import WebSocket from "ws";
 import { z } from "zod";
-import { defineService, gateway, resource } from "@/src/index.ts";
+import { defineService, gateway, resource } from "@/index.ts";
 
 const Item = z.object({ id: z.string(), v: z.number() });
 

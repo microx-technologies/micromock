@@ -1,9 +1,9 @@
-export type { BasicAuthOptions } from "@/src/auth.ts";
-export { apiKeyAuth, basicAuth, bearerAuth, customAuth } from "@/src/auth.ts";
-export { MicromockContainer } from "@/src/container.ts";
-export { buildImage } from "@/src/docker.ts";
-export { collection } from "@/src/resource.ts";
-export { defineService, gateway, resource } from "@/src/service.ts";
+export type { BasicAuthOptions } from "@/auth.ts";
+export { apiKeyAuth, basicAuth, bearerAuth, customAuth } from "@/auth.ts";
+export { MicromockContainer } from "@/container.ts";
+export { buildImage } from "@/docker.ts";
+export { collection } from "@/resource.ts";
+export { defineService, gateway, resource } from "@/service.ts";
 export type {
   Collection,
   Connection,
@@ -25,4 +25,4 @@ export type {
   SideEffectFn,
   StartedMock,
   StartedService,
-} from "@/src/types.ts";
+} from "@/types.ts";

@@ -7,7 +7,7 @@ import {
   customAuth,
   defineService,
   resource,
-} from "@/src/index.ts";
+} from "@/index.ts";
 
 const Item = z.object({ id: z.string() });
 

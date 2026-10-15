@@ -139,3 +139,7 @@ dist
 
 # Nix
 .direnv
+
+# micromock image cache
+.tsup/
+.micromock/

@@ -1,5 +1,5 @@
-import { ID_PREFIX } from "@/src/constants.ts";
-import type { Collection, Entity, FailShape, MockState } from "@/src/types.ts";
+import { ID_PREFIX } from "@/constants.ts";
+import type { Collection, Entity, FailShape, MockState } from "@/types.ts";
 
 interface FailRule {
   remaining: number;

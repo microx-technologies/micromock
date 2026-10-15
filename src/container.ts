@@ -3,9 +3,9 @@ import {
   type StartedTestContainer,
   Wait,
 } from "testcontainers";
-import { HEALTH_PATH, RESET_PATH } from "@/src/constants.ts";
-import { buildImage, ephemeralPort } from "@/src/docker.ts";
-import type { StartedMock } from "@/src/types.ts";
+import { HEALTH_PATH, RESET_PATH } from "@/constants.ts";
+import { buildImage, ephemeralPort } from "@/docker.ts";
+import type { StartedMock } from "@/types.ts";
 
 export class MicromockContainer {
   private seedPatch: Record<string, unknown[]> | undefined;

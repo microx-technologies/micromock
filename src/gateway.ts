@@ -4,13 +4,13 @@ import {
   WS_HANDLER_ERROR_REASON,
   WS_RESET_CODE,
   WS_RESET_REASON,
-} from "@/src/constants.ts";
+} from "@/constants.ts";
 import type {
   Connection,
   GatewayDef,
   GatewayHandle,
   GatewayRegistry,
-} from "@/src/types.ts";
+} from "@/types.ts";
 
 export interface RawSocket {
   send(data: string | ArrayBuffer): void;
@@ -170,8 +170,7 @@ export class GatewayRuntime {
 function handlerError(conn: ManagedConnection): void {
   try {
     conn.close(WS_HANDLER_ERROR_CODE, WS_HANDLER_ERROR_REASON);
-  } catch {
-  }
+  } catch {}
 }
 
 export function runGatewayHandler(

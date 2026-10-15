@@ -1,6 +1,6 @@
 import { websocket } from "@hono/bun";
-import { DEFAULT_PORT, ENV_PORT } from "@/src/constants.ts";
-import type { Service, StartedService } from "@/src/types.ts";
+import { DEFAULT_PORT, ENV_PORT } from "@/constants.ts";
+import type { Service, StartedService } from "@/types.ts";
 
 export { websocket };
 

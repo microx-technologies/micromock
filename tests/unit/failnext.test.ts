@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
-import { collection, defineService, resource } from "@/src/index.ts";
+import { collection, defineService, resource } from "@/index.ts";
 
 const Item = z.object({ id: z.string(), v: z.number() });
 

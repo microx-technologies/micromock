@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { ERR_INVALID_JSON } from "@/src/constants.ts";
-import { collection, readJsonBody, resource } from "@/src/resource.ts";
-import { defineService, gateway } from "@/src/service.ts";
+import { ERR_INVALID_JSON } from "@/constants.ts";
+import { collection, readJsonBody, resource } from "@/resource.ts";
+import { defineService, gateway } from "@/service.ts";
 
 const Message = z.object({
   id: z.string(),

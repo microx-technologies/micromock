@@ -4,7 +4,7 @@ import {
   ERR_INVALID_JSON,
   ERR_NOT_FOUND,
   ERR_VALIDATION,
-} from "@/src/constants.ts";
+} from "@/constants.ts";
 import type {
   Collection,
   CrudHelpers,
@@ -15,7 +15,7 @@ import type {
   ResourceDef,
   ResourceSchema,
   SideEffectFn,
-} from "@/src/types.ts";
+} from "@/types.ts";
 
 const OP_METHODS = ["GET", "POST", "PATCH", "PUT", "DELETE"] as const;
 type OpMethod = (typeof OP_METHODS)[number];

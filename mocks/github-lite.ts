@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { customAuth } from "@/src/auth.ts";
-import { collection, resource } from "@/src/resource.ts";
-import { defineService } from "@/src/service.ts";
+import { customAuth } from "@/auth.ts";
+import { collection, resource } from "@/resource.ts";
+import { defineService } from "@/service.ts";
 
 const Repo = z.object({
   id: z.string(),
