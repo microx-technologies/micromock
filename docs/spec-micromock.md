@@ -2,7 +2,7 @@
 
 ## 1. Intent
 
-- **Outcome:** Generic TS/Bun-first framework for code-defined, stateful, Dockerized replicas of SaaS APIs over HTTP and WebSocket.
+- **Outcome:** Generic TS/Node-first framework for code-defined, stateful, Dockerized replicas of SaaS APIs over HTTP and WebSocket.
 - **User:** TS devs running Testcontainers integration tests against external SaaS SDKs via base-URL / gateway-URL override.
 - **Why now:** No standardized way to build Dockerized mock services; ad-hoc mock surface grows per project.
 - **Success:** A new SaaS-lite in one small file, SDK-compatible by endpoint swap alone.
@@ -168,12 +168,13 @@ Notes:
 
 ## 8. Docker / Testcontainers integration
 
-- Per-service build with `bun build`, content-hash cached:
+- Per-service build with esbuild (CJS bundle), content-hash cached:
 
 ```dockerfile
-FROM oven/bun:distroless
-COPY ./dist/service.js ./service.js
-CMD ["bun", "./service.js"]
+FROM gcr.io/distroless/nodejs22-debian12
+WORKDIR /app
+COPY ./dist/service.cjs ./service.cjs
+CMD ["./service.cjs"]
 ```
 
 - Testcontainers binding helper (exact import path TBD; `testcontainers` as peer dep):
@@ -200,11 +201,11 @@ afterAll(() => mock.stop());
 ## 10. Decisions
 
 1. **Schema/validation:** zod as a direct dependency. `crud()` validates bodies against the resource schema.
-2. **Routing core:** Hono. The service is a Hono app. WS upgrade uses `@hono/bun` (`createBunWebSocket`).
-3. **Image build story:** `bun build` per-service image with content-hash caching.
+2. **Routing core:** Hono. The service wraps a Hono app (`Service.honoApp`); serving runs on `@hono/node-server` with `ws` handling gateway upgrades.
+3. **Image build story:** esbuild per-service bundle (CJS) into a distroless Node image with content-hash caching.
 4. **Workflow primitive:** imperative handlers plus side-effect hooks plus the deterministic scheduler (`after` / `afterReads`).
-5. **Package exports:** `micromock` root exports `defineService`, `resource`, `gateway`, `bearerAuth`, `basicAuth`, `apiKeyAuth`, `customAuth`, `MicromockContainer`.
-6. **WS core:** `@hono/bun` upgrade with a framework session and fan-out layer (`Connection` plus `broadcast(filter)` plus `reset()` dropping connections). Gateway handlers stay transport-agnostic.
+5. **Package exports:** `micromock` root exports `defineService`, `resource`, `gateway`, `isMainModule`, `bearerAuth`, `basicAuth`, `apiKeyAuth`, `customAuth`, `MicromockContainer`.
+6. **WS core:** `ws` noServer upgrade dispatch into a framework session and fan-out layer (`Connection` plus `broadcast(filter)` plus `reset()` dropping connections). Gateway handlers stay transport-agnostic.
 7. **Bodies/transports:** handlers use Hono `c.req.json() / text() / arrayBuffer() / parseBody()` directly, covering JSON, forms, multipart, and file uploads.
 
 ## 11. Acceptance criteria
@@ -215,7 +216,7 @@ afterAll(() => mock.stop());
 - [ ] `reset()` restores seed, cancels scheduled transitions, and drops WS connections between tests; `failNext` drives at least one SDK error-path test.
 - [ ] `schedule.after` drives at least one time-based transition test; `schedule.afterReads` drives at least one poll-based transition test.
 - [ ] Test-suite binding is ≤5 lines of setup per suite (container start + baseUrl + reset hook).
-- [ ] README documents: defining a service, seed/reset, auth presets plus `customAuth`, bodies via Hono, gateway plus `broadcast`, scheduler, SDK-compat deltas, Dockerfile (`bun build`), Testcontainers binding.
+- [ ] README documents: defining a service, seed/reset, auth presets plus `customAuth`, bodies via Hono, gateway plus `broadcast`, scheduler, SDK-compat deltas, Dockerfile (esbuild bundle into distroless Node), Testcontainers binding.
 
 ## 12. Explicitly deferred
 

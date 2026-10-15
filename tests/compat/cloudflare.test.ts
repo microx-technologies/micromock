@@ -1,6 +1,6 @@
-import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import cf from "@mocks/cloudflare-lite.ts";
 import Cloudflare from "cloudflare";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
 let baseURL = "";
 let stop = () => {};

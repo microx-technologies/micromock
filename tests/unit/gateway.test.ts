@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import WebSocket from "ws";
 import { z } from "zod";
 import { defineService, gateway, resource } from "@/index.ts";
@@ -118,7 +118,7 @@ describe("gateway runtime", () => {
 
   test("non-upgrade GET on gateway path is 400", async () => {
     const svc = build();
-    const res = await svc.app.request("/socket");
+    const res = await svc.honoApp.request("/socket");
     expect(res.status).toBe(400);
     expect(await res.json()).toEqual({ error: "expected_websocket" });
   });

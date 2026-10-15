@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { customAuth } from "@/auth.ts";
 import { collection, resource } from "@/resource.ts";
-import { defineService } from "@/service.ts";
+import { defineService, isMainModule } from "@/service.ts";
 
 const Repo = z.object({
   id: z.string(),
@@ -82,6 +82,6 @@ const github = defineService({
 
 export default github;
 
-if (import.meta.main) {
+if (isMainModule(import.meta.url)) {
   github.start();
 }

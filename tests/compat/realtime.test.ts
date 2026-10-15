@@ -1,5 +1,5 @@
-import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import rt from "@mocks/realtime-lite.ts";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import WebSocket from "ws";
 
 let baseUrl = "";

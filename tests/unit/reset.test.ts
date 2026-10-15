@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "bun:test";
+import { describe, expect, test, vi } from "vitest";
 import WebSocket from "ws";
 import { z } from "zod";
 import { collection, defineService, gateway, resource } from "@/index.ts";
@@ -53,7 +53,7 @@ describe("reset", () => {
       ]);
       vi.useFakeTimers();
       vi.advanceTimersByTime(50);
-      await svc.app.request("/items");
+      await svc.honoApp.request("/items");
       expect(timer).toBe(0);
       expect(reads).toBe(0);
       vi.useRealTimers();

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { apiKeyAuth } from "@/auth.ts";
 import { collection, resource } from "@/resource.ts";
-import { defineService } from "@/service.ts";
+import { defineService, isMainModule } from "@/service.ts";
 
 const Zone = z.object({ id: z.string(), name: z.string(), status: z.string() });
 const DnsRecord = z.object({
@@ -125,6 +125,6 @@ const cloudflare = defineService({
 
 export default cloudflare;
 
-if (import.meta.main) {
+if (isMainModule(import.meta.url)) {
   cloudflare.start();
 }

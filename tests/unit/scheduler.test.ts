@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from "bun:test";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { collection, defineService, resource } from "@/index.ts";
 
@@ -50,19 +50,19 @@ describe("scheduler", () => {
     svc.schedule.afterReads("items", 2, () => {
       hits++;
     });
-    await svc.app.request("/items");
+    await svc.honoApp.request("/items");
     expect(hits).toBe(0);
-    await svc.app.request("/items/1");
+    await svc.honoApp.request("/items/1");
     expect(hits).toBe(1);
-    await svc.app.request("/items");
-    await svc.app.request("/items/1");
+    await svc.honoApp.request("/items");
+    await svc.honoApp.request("/items/1");
     expect(hits).toBe(1);
 
     let miss = 0;
     svc.schedule.afterReads("items", 1, () => {
       miss++;
     });
-    await svc.app.request("/items/nope");
+    await svc.honoApp.request("/items/nope");
     expect(miss).toBe(0);
   });
 
@@ -79,7 +79,7 @@ describe("scheduler", () => {
     });
     svc.reset();
     vi.advanceTimersByTime(50);
-    await svc.app.request("/items");
+    await svc.honoApp.request("/items");
     expect(timer).toBe(0);
     expect(reads).toBe(0);
   });

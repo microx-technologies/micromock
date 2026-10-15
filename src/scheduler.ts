@@ -8,7 +8,7 @@ interface ReadWatcher {
 }
 
 export function createScheduler(getCtx: () => MockContext): Scheduler {
-  const timers = new Set<Timer>();
+  const timers = new Set<NodeJS.Timeout>();
   const watchers = new Set<ReadWatcher>();
 
   return {

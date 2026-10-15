@@ -1,10 +1,8 @@
-import { upgradeWebSocket } from "@hono/bun";
 import type { Handler } from "hono";
 import { Hono } from "hono";
-import type { WSContext } from "hono/ws";
 import { FRAMEWORK_NS, HEALTH_PATH, RESET_PATH } from "@/constants.ts";
-import type { ManagedConnection, ManagedGateway } from "@/gateway.ts";
-import { GatewayRuntime, runGatewayHandler } from "@/gateway.ts";
+import type { ManagedGateway } from "@/gateway.ts";
+import { GatewayRuntime } from "@/gateway.ts";
 import { buildCrud, crudHelpers, parseOpKey, resource } from "@/resource.ts";
 import { createScheduler } from "@/scheduler.ts";
 import { startService } from "@/serve.ts";
@@ -21,6 +19,7 @@ import type {
   ServiceDefinition,
 } from "@/types.ts";
 
+export { isMainModule } from "@/serve.ts";
 export { resource };
 
 export function gateway(def: GatewayDef): GatewayDef {
@@ -28,20 +27,6 @@ export function gateway(def: GatewayDef): GatewayDef {
     throw new Error('micromock: gateway path must start with "/"');
   }
   return def;
-}
-
-function toArrayBuffer(
-  message: string | ArrayBufferLike,
-): string | ArrayBuffer {
-  if (typeof message === "string") return message;
-  if (message instanceof ArrayBuffer) return message.slice(0);
-  return new Uint8Array(message).slice().buffer;
-}
-
-function rawOf(ws: WSContext): unknown {
-  if ("raw" in ws && typeof ws.raw === "object" && ws.raw !== null)
-    return ws.raw;
-  return undefined;
 }
 
 export function defineService(def: ServiceDefinition): Service {
@@ -113,7 +98,7 @@ export function defineService(def: ServiceDefinition): Service {
   def.extraRoutes?.(app);
 
   for (const gw of Object.values(runtime.gateways)) {
-    registerGateway(app, gw, ctxHolder);
+    registerGateway(app, gw);
   }
 
   const name = def.name;
@@ -125,10 +110,11 @@ export function defineService(def: ServiceDefinition): Service {
 
   const service: Service = {
     name,
-    app,
+    honoApp: app,
     state,
     schedule,
     gateways,
+    handleRequest: (request: Request) => app.fetch(request),
     withSeed(patch) {
       state.withSeed(patch);
       schedule.cancelAll();
@@ -147,55 +133,8 @@ export function defineService(def: ServiceDefinition): Service {
   return service;
 }
 
-function registerGateway(
-  app: Hono<MockEnv>,
-  gw: ManagedGateway,
-  ctxHolder: { current: MockContext },
-): void {
-  app.get(gw.def.path, (c, next) => {
-    if (c.req.header("upgrade")?.toLowerCase() !== "websocket") {
-      return c.json({ error: "expected_websocket" }, 400);
-    }
-    return next();
-  });
-  app.get(
-    gw.def.path,
-    upgradeWebSocket((_c) => {
-      const ctx = ctxHolder.current;
-      return {
-        onOpen: (_evt, ws: WSContext) => {
-          const raw = rawOf(ws);
-          const conn: ManagedConnection = gw.open({
-            send: (data: string | ArrayBuffer) => ws.send(data),
-            close: (code?: number, reason?: string) => ws.close(code, reason),
-            tag: raw,
-          });
-          runGatewayHandler(conn, () => gw.def.onOpen?.({ ...ctx, conn }));
-        },
-        onMessage: (evt, ws: WSContext) => {
-          const conn = gw.byRaw(rawOf(ws));
-          if (conn === undefined) return;
-          const msg = toArrayBuffer(evt.data as string | ArrayBufferLike);
-          runGatewayHandler(conn, () =>
-            gw.def.onMessage?.({ ...ctx, conn, msg }),
-          );
-        },
-        onClose: (evt, ws: WSContext) => {
-          const conn = gw.byRaw(rawOf(ws));
-          if (conn === undefined) return;
-          gw.remove(conn);
-          runGatewayHandler(conn, () =>
-            gw.def.onClose?.({
-              ...ctx,
-              conn,
-              code: (evt as CloseEvent).code,
-              reason: (evt as CloseEvent).reason,
-            }),
-          );
-        },
-      };
-    }),
-  );
+function registerGateway(app: Hono<MockEnv>, gw: ManagedGateway): void {
+  app.get(gw.def.path, (c) => c.json({ error: "expected_websocket" }, 400));
 }
 
 export type { ResourceDef };

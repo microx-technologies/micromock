@@ -123,10 +123,11 @@ export interface ServiceDefinition {
 
 export interface Service {
   readonly name: string;
-  readonly app: Hono<MockEnv>;
+  readonly honoApp: Hono<MockEnv>;
   readonly state: MockState;
   readonly schedule: Scheduler;
   readonly gateways: GatewayRegistry;
+  handleRequest(request: Request): Response | Promise<Response>;
   withSeed(patch: Record<string, unknown[]>): this;
   reset(): void;
   start(port?: number): StartedService;

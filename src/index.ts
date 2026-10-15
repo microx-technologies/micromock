@@ -3,7 +3,7 @@ export { apiKeyAuth, basicAuth, bearerAuth, customAuth } from "@/auth.ts";
 export { MicromockContainer } from "@/container.ts";
 export { buildImage } from "@/docker.ts";
 export { collection } from "@/resource.ts";
-export { defineService, gateway, resource } from "@/service.ts";
+export { defineService, gateway, isMainModule, resource } from "@/service.ts";
 export type {
   Collection,
   Connection,

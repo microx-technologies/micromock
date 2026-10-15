@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import { z } from "zod";
 import type { MockState } from "@/index.ts";
 import { collection, defineService, resource } from "@/index.ts";

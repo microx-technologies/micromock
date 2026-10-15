@@ -1,12 +1,12 @@
 # micromock
 
-Code-defined, stateful, Dockerized replicas of SaaS APIs for integration tests. Bun-first.
+Code-defined, stateful, Dockerized replicas of SaaS APIs for integration tests. Node-first, Bun-compatible.
 
 Define a service in one file, run it in Docker via Testcontainers, point the official SDK at it by overriding the endpoint URL. Per-test isolation via seed and reset. Test infrastructure only — no persistence, no hardening.
 
 ## Requirements
 
-- Bun >= 1.0 (`bun --version`)
+- Node >= 22 (`node --version`), or Bun >= 1.0 (`bun --version`) for Bun-compat mode
 - Docker running (`docker info`)
 - Linux or macOS. `MicromockContainer` binds a container per suite; one container per test file or worker, not shared state.
 
@@ -15,41 +15,41 @@ Define a service in one file, run it in Docker via Testcontainers, point the off
 This package is not on npm. Install from GitHub:
 
 ```sh
-# bun
-bun add github:microx-technologies/micromock#v0.1.0
-
 # pnpm
 pnpm add github:microx-technologies/micromock#v0.1.0
+
+# bun
+bun add github:microx-technologies/micromock#v0.1.0
 ```
 
 Replace `microx-technologies/micromock` with the fork if you use one. Use a different tag for a different version:
 
 ```sh
-# bun
-bun add github:microx-technologies/micromock#v0.2.0
-
 # pnpm
 pnpm add github:microx-technologies/micromock#v0.2.0
+
+# bun
+bun add github:microx-technologies/micromock#v0.2.0
 ```
 
 The published tarball contains `dist/`, `Dockerfile.tmpl`, `README.md`, `LICENSE`. `prepack` builds `dist/` automatically; a pinned tag includes a CI-built `micromock-*.tgz` as a fallback if you prefer a file install:
 
 ```sh
-# bun
-bun add ./micromock-0.1.0.tgz
-
 # pnpm
 pnpm add ./micromock-0.1.0.tgz
+
+# bun
+bun add ./micromock-0.1.0.tgz
 ```
 
 `testcontainers` is a peer dependency — install it in your project:
 
 ```sh
-# bun
-bun add -d testcontainers
-
 # pnpm
 pnpm add -D testcontainers
+
+# bun
+bun add -d testcontainers
 ```
 
 ## Define a service
@@ -85,7 +85,7 @@ Rules:
 - Resource schemas must be zod objects with a string `id` field. `crud()` validates bodies against the schema.
 - `r.crud()` generates `GET` list, `GET` one, `POST`, `PATCH`, `DELETE`. Override any operation by redefining its `"METHOD /path"` key. Custom keys must match `"METHOD /path"` with a valid method and leading `/`.
 - Handlers are Hono handlers. Read bodies with `c.req.json()` / `text()` / `arrayBuffer()` / `parseBody()`. State via `c.get("mock")` → `{ state, schedule, gateways }`.
-- Run standalone with `if (import.meta.main) github.start();`. `start(port?)` uses `PORT` env or 3000. `start(0)` binds an ephemeral port for tests.
+- Run standalone with `if (isMainModule(import.meta.url)) github.start();` (`isMainModule` from `micromock`; works under Node and Bun). `start(port?)` uses `PORT` env or 3000. `start(0)` binds an ephemeral port for tests. Run `.ts` mocks via `tsx` (handles tsconfig `@/*` aliases) or `bun`; plain `node` needs a loader for path aliases.
 
 ## Seed and reset
 
@@ -219,7 +219,7 @@ await mock.reset();
 await mock.stop();
 ```
 
-- `serviceFile` must end in `.ts`. Relative paths resolve against the process working directory. The file is bundled with `bun build` into the image, so it must be self-contained.
+- `serviceFile` must end in `.ts`. Relative paths resolve against the process working directory. The file is bundled with esbuild into the image, so it must be self-contained.
 - `baseUrl()` for HTTP SDKs, `wsUrl(path?)` for gateway clients. `reset()` POSTs to `/__micromock/reset` and throws on non-2xx. Container readiness waits on `GET /__micromock/health` with a 30s startup timeout.
 - Images are content-hashed (`micromock-<name>:<hash>`) and cached. Image cache markers live in the OS temp dir; Docker's own image cache is reused across suites.
 
@@ -233,7 +233,7 @@ Only override the endpoint URL and credentials. Deltas per bundled replica:
 
 ## Reference
 
-- `defineService({ name, seed?, auth?, resources?, gateways?, extraRoutes? })` → `Service { name, app, state, schedule, gateways, withSeed, reset, start }`
+- `defineService({ name, seed?, auth?, resources?, gateways?, extraRoutes? })` → `Service { name, honoApp, state, schedule, gateways, handleRequest, withSeed, reset, start }`
 - `resource({ schema, operations?, sideEffects? })`, `gateway({ path, onOpen?, onMessage?, onClose? })`
 - `bearerAuth`, `basicAuth`, `apiKeyAuth`, `customAuth`
 - `collection(state, name)`, `readJsonBody(c)` (`{ ok: true, body } | { ok: false, response }`)
@@ -245,17 +245,17 @@ Defaults: CRUD `200` / `201` on create / `204` on delete; `404 { error: "not_fou
 ## Develop
 
 ```sh
-# bun
-bun install
-bun run build
-bun test
-bun run check   # biome + tsc
-
 # pnpm
 pnpm install
 pnpm run build
 pnpm test
 pnpm run check   # biome + tsc
+
+# bun
+bun install
+bun run build
+bun run test
+bun run check   # biome + tsc
 ```
 
 Release: bump `version` in `package.json`, push tag `v<version>` (e.g. `v0.1.0`). CI verifies the tag matches `package.json`, builds, tests, packs, and publishes a GitHub release with the tarball and generated notes.

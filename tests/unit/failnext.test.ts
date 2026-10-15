@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import { z } from "zod";
 import { collection, defineService, resource } from "@/index.ts";
 
@@ -15,11 +15,11 @@ describe("failNext", () => {
   test("per-key consumed FIFO, then handler runs", async () => {
     const svc = build();
     svc.state.failNext("GET /items", 2, { status: 500, body: { boom: true } });
-    const first = await svc.app.request("/items");
+    const first = await svc.honoApp.request("/items");
     expect(first.status).toBe(500);
     expect(await first.json()).toEqual({ boom: true });
-    expect((await svc.app.request("/items")).status).toBe(500);
-    const third = await svc.app.request("/items");
+    expect((await svc.honoApp.request("/items")).status).toBe(500);
+    const third = await svc.honoApp.request("/items");
     expect(third.status).toBe(200);
     expect(await third.json()).toEqual([{ id: "1", v: 1 }]);
   });
@@ -28,10 +28,10 @@ describe("failNext", () => {
     const svc = build();
     svc.state.failNext(1, { status: 503 });
     svc.state.failNext("GET /items", 1, { status: 500, body: { keyed: true } });
-    const keyed = await svc.app.request("/items");
+    const keyed = await svc.honoApp.request("/items");
     expect(keyed.status).toBe(500);
     expect(await keyed.json()).toEqual({ keyed: true });
-    const global = await svc.app.request("/items/1");
+    const global = await svc.honoApp.request("/items/1");
     expect(global.status).toBe(503);
     expect(await global.json()).toEqual({ error: "injected" });
   });
@@ -49,7 +49,7 @@ describe("failNext", () => {
     });
     svc.state.failNext("DELETE /items/:id", 1, { status: 500 });
     expect(
-      (await svc.app.request("/items/1", { method: "DELETE" })).status,
+      (await svc.honoApp.request("/items/1", { method: "DELETE" })).status,
     ).toBe(500);
     expect(fired).toBe(0);
     expect(reads).toBe(0);
@@ -62,11 +62,11 @@ describe("failNext", () => {
       status: 429,
       headers: { "retry-after": "7" },
     });
-    const res = await svc.app.request("/items");
+    const res = await svc.honoApp.request("/items");
     expect(res.status).toBe(429);
     expect(res.headers.get("retry-after")).toBe("7");
     svc.reset();
-    expect((await svc.app.request("/items")).status).toBe(200);
+    expect((await svc.honoApp.request("/items")).status).toBe(200);
   });
 
   test("invalid n and status throw", () => {

@@ -1,3 +1,4 @@
-FROM oven/bun:distroless
-COPY ./dist/service.js ./service.js
-CMD ["./service.js"]
+FROM gcr.io/distroless/nodejs22-debian12
+WORKDIR /app
+COPY ./dist/service.cjs ./service.cjs
+CMD ["./service.cjs"]

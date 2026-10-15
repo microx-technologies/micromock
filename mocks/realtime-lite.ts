@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ERR_INVALID_JSON } from "@/constants.ts";
 import { collection, readJsonBody, resource } from "@/resource.ts";
-import { defineService, gateway } from "@/service.ts";
+import { defineService, gateway, isMainModule } from "@/service.ts";
 
 const Message = z.object({
   id: z.string(),
@@ -86,6 +86,6 @@ const realtime = defineService({
 
 export default realtime;
 
-if (import.meta.main) {
+if (isMainModule(import.meta.url)) {
   realtime.start();
 }

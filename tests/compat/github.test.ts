@@ -1,6 +1,6 @@
-import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import github from "@mocks/github-lite.ts";
 import { Octokit } from "octokit";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
 let baseUrl = "";
 let stop = () => {};
