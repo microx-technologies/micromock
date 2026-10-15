@@ -1,0 +1,27 @@
+{
+  "name": "micromock",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "check": "biome check --write && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/bun": "latest",
+    "@types/ws": "^8.18.2",
+    "cloudflare": "^7.3.0",
+    "octokit": "^5.0.5",
+    "testcontainers": "^12.2.1",
+    "ws": "^8.22.0"
+  },
+  "peerDependencies": {
+    "testcontainers": "^12",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@hono/bun": "^1.0.1",
+    "hono": "^4.13.13",
+    "zod": "^4.6.7"
+  }
+}
