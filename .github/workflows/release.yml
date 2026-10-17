@@ -15,14 +15,15 @@ concurrency:
 
 jobs:
   release:
-    name: build / test / release
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
-      - name: Setup Bun
+      - name: Setup bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.4.0"
@@ -62,7 +63,7 @@ jobs:
           VERSION="${{ github.ref_name }}"
           TMP_COMPILED=$(mktemp -d)
           cp -r dist "$TMP_COMPILED/dist"
-          cp package.json README.md LICENSE Dockerfile.tmpl "$TMP_COMPILED/"
+          cp package.json README.md LICENSE "$TMP_COMPILED/"
 
           cd "$TMP_COMPILED"
           git init
@@ -80,8 +81,8 @@ jobs:
             git push -f origin latest
           fi
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-') }}
