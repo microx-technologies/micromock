@@ -12,7 +12,17 @@ Define a service in one file, run it in Docker via Testcontainers, point the off
 
 ## Install
 
-This package is not on npm. Install from GitHub:
+This package is not on npm. Install the compiled release branch from GitHub:
+
+```sh
+# pnpm (latest stable release)
+pnpm add github:microx-technologies/micromock#latest
+
+# bun
+bun add github:microx-technologies/micromock#latest
+```
+
+Or pin to a specific version:
 
 ```sh
 # pnpm
@@ -22,25 +32,7 @@ pnpm add github:microx-technologies/micromock#v0.1.0
 bun add github:microx-technologies/micromock#v0.1.0
 ```
 
-Replace `microx-technologies/micromock` with the fork if you use one. Use a different tag for a different version:
-
-```sh
-# pnpm
-pnpm add github:microx-technologies/micromock#v0.2.0
-
-# bun
-bun add github:microx-technologies/micromock#v0.2.0
-```
-
-The published tarball contains `dist/`, `Dockerfile.tmpl`, `README.md`, `LICENSE`. `prepack` builds `dist/` automatically; a pinned tag includes a CI-built `micromock-*.tgz` as a fallback if you prefer a file install:
-
-```sh
-# pnpm
-pnpm add ./micromock-0.1.0.tgz
-
-# bun
-bun add ./micromock-0.1.0.tgz
-```
+The `#latest` / `#vX.Y.Z` refs contain only the compiled distribution (`dist/`, `Dockerfile.tmpl`, `README.md`, `LICENSE`) — no source checkout, no build step.
 
 `testcontainers` is a peer dependency — install it in your project:
 
@@ -258,7 +250,7 @@ bun run test
 bun run check   # biome + tsc
 ```
 
-Release: bump `version` in `package.json`, push tag `v<version>` (e.g. `v0.1.0`). CI verifies the tag matches `package.json`, builds, tests, packs, and publishes a GitHub release with the tarball and generated notes.
+Release: bump `version` in `package.json`, push tag `v<version>` (e.g. `v0.1.0`). CI verifies the tag matches `package.json`, checks, tests, builds, pushes the compiled branch (and `latest` for stable versions), and creates a GitHub release with generated notes.
 
 ## License
 
