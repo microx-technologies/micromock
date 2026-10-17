@@ -1,0 +1,48 @@
+{
+  "name": "@microx-technologies/micromock",
+  "version": "0.1.0",
+  "description": "Code-defined, stateful, Dockerized replicas of SaaS APIs for Testcontainers integration tests.",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microx-technologies/micromock.git"
+  },
+  "files": [
+    "dist",
+    "Dockerfile.tmpl",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepack": "bun run build",
+    "test": "vitest run",
+    "check": "biome check --write && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/node": "^24.0.0",
+    "@types/ws": "^8.18.2",
+    "cloudflare": "^7.3.0",
+    "octokit": "^5.0.5",
+    "testcontainers": "^12.2.1",
+    "tsup": "^9.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5",
+    "vitest": "^5.0.5"
+  },
+  "peerDependencies": {
+    "testcontainers": "^12"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.0",
+    "esbuild": "^0.25.0",
+    "hono": "^4.13.13",
+    "ws": "^8.22.0",
+    "zod": "^4.6.7"
+  },
+  "license": "AGPL-3.0"
+}
